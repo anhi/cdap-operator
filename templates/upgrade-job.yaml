@@ -60,6 +60,10 @@ spec:
               mountPath: /etc/cdap/security
               readOnly: true
             {{end}}
+            {{if .DataVolume.Name}}
+            - name: {{.DataVolume.Name}}
+              mountPath: {{.DataVolume.MountPath}}
+            {{end}}
       volumes:
         - name: cdap-conf
           configMap:
@@ -67,11 +71,16 @@ spec:
         - name: hadoop-conf
           configMap:
             name: {{.HConf}}
-      {{if .SecuritySecret}}
+        {{if .SecuritySecret}}
         - name: cdap-security
           secret:
             secretName: {{.SecuritySecret}}
-      {{end}}
+        {{end}}
+        {{if .DataVolume.Name}}
+        - name: {{.DataVolume.Name}}
+          persistentVolumeClaim:
+            claimName: {{.DataVolume.ClaimName}}
+       {{end}}
       restartPolicy: Never
   backoffLimit: {{.BackoffLimit}}
   activeDeadlineSeconds: 600

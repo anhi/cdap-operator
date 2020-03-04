@@ -137,8 +137,12 @@ spec:
             - name: cdap-security
               mountPath: /etc/cdap/security
               readOnly: true
+            {{end}}
+            {{if $.Base.DataVolume.Name}}
+            - name: {{$.Base.DataVolume.Name}}
+              mountPath: {{$.Base.DataVolume.MountPath}}
+            {{end}}
           {{end}}
-      {{end}}
       volumes:
         - name: podinfo
           downwardAPI:
@@ -162,6 +166,11 @@ spec:
         - name: cdap-security
           secret:
             secretName: {{$.Base.SecuritySecret}}
+        {{end}}
+        {{if $.Base.DataVolume.Name}}
+        - name: {{$.Base.DataVolume.Name}}
+          persistentVolumeClaim:
+            claimName: {{$.Base.DataVolume.ClaimName}}
         {{end}}
   volumeClaimTemplates:
   - metadata:

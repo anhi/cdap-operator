@@ -29,6 +29,8 @@ import (
 // Field names for individual services must match the constant values of ServiceName in constants.go as reflection
 // is used to find field value.
 type CDAPMasterSpec struct {
+	// DataVolume is an optional volume mounted to all pods.
+	DataVolume DataVolumeSpec `json:"dataVolume,omitempty"`
 	// Image is the docker image name for the CDAP backend.
 	Image string `json:"image,omitempty"`
 	// UserInterfaceImage is the docker image name for the CDAP UI.
@@ -72,6 +74,16 @@ type CDAPMasterSpec struct {
 	// 2:        UI in its own Pod. Other services in a single multi-container Pod
 	// 3:        UI and Router in their own Pod. All other services runs in a multi-container Pod
 	NumPods *int32 `json:"numPods,omitempty"`
+}
+
+// DataVolumeSpec defines the base set of specifications for the DataVolume.
+//
+// If the name of structure needs to be changed, update the code where it uses reflect to find this field.
+type DataVolumeSpec struct {
+	// Name of the volume
+	Name      string `json:"name,omitempty"`
+	ClaimName string `json:"claimName,omitempty"`
+	MountPath string `json:"mountPath,omitempty"`
 }
 
 // CDAPServiceSpec defines the base set of specifications applicable to all master services.
